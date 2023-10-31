@@ -134,3 +134,16 @@ Sync with paragraphs
   <Paragraphs audioUrl="$audio" sync="audio-1" name="txt-1" value="$text" layout="dialogue" showplayer="true" />
 </View>
 ```
+### Example
+
+Audio transcription with Ground Truth checkup
+
+```html
+<View>
+  <Audio name="audio" value="$audio" zoom="true" hotkey="ctrl+enter" />
+  <Header value="Ground Truth Transcript" />
+  <TextArea name="ground_truth" toName="audio" value="$text" rows="4" editable="true" />
+  <Header value="Your Transcription" />
+  <TextArea name="transcription" toName="audio" rows="4" editable="true" maxSubmissions="1" />
+</View>
+```
