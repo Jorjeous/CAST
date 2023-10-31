@@ -16,8 +16,29 @@ from core.feature_flags import flag_set
 from django.conf import settings
 from django.db import models
 from rest_framework.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 
 logger = logging.getLogger(__name__)
+
+
+
+# def read_tasks_list_from_jsonl(self):
+#     logger.debug('Read tasks list from JSONL file {}'.format(self.file.name))
+#     lines = self.content.splitlines()
+#     tasks = []
+#     for line in lines:
+#         try:
+#             task = json.loads(line)
+#             if not task.get('data'):
+#                 task = {'data': task}
+#             if not isinstance(task['data'], dict):
+#                 raise ValidationError('Task item should be dict')
+#             tasks.append(task)
+#         except json.JSONDecodeError:
+#             raise ValidationError(f"Failed to parse line as JSON: {line}")
+#     return tasks
+
 
 
 def upload_name_generator(instance, filename):
@@ -74,6 +95,14 @@ class FileUpload(models.Model):
             body = self.file.read().decode('utf-8')
             setattr(self, '_file_body', body)
         return body
+    
+    @classmethod
+    def create_from_local_path(cls, user, project, local_path):
+        with open(local_path, 'rb') as f:
+            file_upload = cls(user=user, project=project)
+            file_upload.file.save(os.path.basename(local_path), SimpleUploadedFile(os.path.basename(local_path), f.read()))
+            file_upload.save()
+        return file_upload
 
     def read_tasks_list_from_csv(self, sep=','):
         logger.debug('Read tasks list from CSV file {}'.format(self.file.name))
@@ -110,6 +139,38 @@ class FileUpload(models.Model):
             tasks_formatted.append(task)
         return tasks_formatted
 
+
+    def read_tasks_list_from_jsonl(self):
+        from .uploader import create_file_upload
+        logger.debug('Read tasks list from JSONL file {}'.format(self.file.name))
+        
+        content = self.content.splitlines()
+
+        tasks = []
+        for line in content:
+            task_data = json.loads(line)
+
+            if 'audio_filepath' in task_data:
+                # Get the path of the audio file
+                audio_path = task_data.pop('audio_filepath')  # pop - to remove the original key
+
+                if os.path.exists(audio_path):
+                    # Upload audio to LS file storage
+                    with open(audio_path, 'rb') as audio_file:
+                        # Create a FileUpload for the audio
+                        audio_upload = create_file_upload(self.user, self.project, SimpleUploadedFile(os.path.basename(audio_path), audio_file.read()))
+
+                        # Update the task data to have the key 'audio' (LS requirement)
+                        task_data['audio'] = audio_upload.url
+                else:
+                    logger.warning(f"Audio file '{audio_path}' does not exist. Skipping.")
+                    continue
+
+            tasks.append({'data': task_data})
+        
+        return tasks
+
+
     def read_task_from_hypertext_body(self):
         logger.debug('Read 1 task from hypertext file {}'.format(self.file.name))
         body = self.content
@@ -139,7 +200,12 @@ class FileUpload(models.Model):
             elif file_format == '.txt' and file_as_tasks_list:
                 tasks = self.read_tasks_list_from_txt()
             elif file_format == '.json':
-                tasks = self.read_tasks_list_from_json()
+                try:
+                    # Attempt to treat as JSON_L
+                    tasks = self.read_tasks_list_from_jsonl()
+                except json.JSONDecodeError:
+                    # standard JSON
+                    tasks = self.read_tasks_list_from_json()
 
             # otherwise - only one object tag should be presented in label config
             elif not self.project.one_object_in_label_config:
