@@ -2,10 +2,11 @@
   <Audio name="audio" value="$audio" zoom="true" hotkey="ctrl+enter" />
 
   <Header value="Ground Truth Transcript" />
-  <TextArea name="ground_truth" toName="audio" value="$text" rows="4" editable="true" />
-  
+  <TextArea name="ground truth" toName="audio" value="$text" rows="4" editable="true" />
+  <!--Button3-->
   <Header value="Your Transcription" />
-  <TextArea name="transcription" toName="audio" rows="4" editable="true" maxSubmissions="1" />
+  <TextArea name="your transcription" toName="audio" rows="4" editable="true" maxSubmissions="1" />
+  
 </View>
 
 <!-- { "data":
