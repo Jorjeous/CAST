@@ -1,5 +1,23 @@
 <img src="https://user-images.githubusercontent.com/12534576/192582340-4c9e4401-1fe6-4dbb-95bb-fdbba5493f61.png"/>
 
+Here is tutorial for using Label Studio (LS) for audio labeling in NeMo mode, above this QuickStart guide placed original README for LS.
+# Setup and installation
+1. Clone this repository, go into label_studio directoty, then find setup.py and run:
+   pip install -e .
+   # python setup.py install  
+3. Next do callstatic:
+    python label_studio/manage.py collectstatic
+4. And build:
+   # python setup.py build
+5. Run server and acess it via browser. (usualy addres is http://127.0.0.1:8080)
+   # python label_studio/manage.py runserver
+# Navigation through LS application
+
+
+
+
+
+
 ![GitHub](https://img.shields.io/github/license/heartexlabs/label-studio?logo=heartex) ![label-studio:build](https://github.com/heartexlabs/label-studio/workflows/label-studio:build/badge.svg) ![GitHub release](https://img.shields.io/github/v/release/heartexlabs/label-studio?include_prereleases)
 
 [Website](https://labelstud.io/) • [Docs](https://labelstud.io/guide/) • [Twitter](https://twitter.com/labelstudiohq) • [Join Slack Community <img src="https://app.heartex.ai/docs/images/slack-mini.png" width="18px"/>](https://slack.labelstud.io/?source=github-1)
