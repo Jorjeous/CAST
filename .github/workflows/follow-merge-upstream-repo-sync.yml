@@ -146,7 +146,7 @@ jobs:
 
       - name: "Frontend: Configure yarn cache"
         if: steps.details.outputs.frontend_module_dist
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ env.CACHE_NAME_PREFIX }}-${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/yarn.lock') }}
@@ -186,7 +186,7 @@ jobs:
 
       - name: "Frontend: LSF Docs: Cache node modules"
         if: steps.details.outputs.build_lsf_docs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: npm-${{ env.CACHE_NAME_PREFIX }}-${{ runner.os }}-node-${{ env.NODE }}-jsdoc-to-markdown
