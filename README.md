@@ -63,8 +63,7 @@ This guide will walk you through using Label Studio for audio labeling.
    - If it's your first time, click on 'Sign in' and create an account using any valid email address (it must pass a sanity check, e.g., name@provider.com).
    - The password should be between 8 to 12 symbols.
    - Remember to uncheck the box for "latest news".
-     Browse%20templates.png?raw=true
-     https://github.com/Jorjeous/CAST/blob/master/images/screenshots/
+
    ![Login or Sign Up](https://github.com/Jorjeous/CAST/blob/master/images/screenshots/logsign.png?ref_type=heads)
 
 2. **Creating a New Project:**
